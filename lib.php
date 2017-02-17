@@ -441,7 +441,8 @@ MSG;
                 if (!isset($user_mapping[$mapping])) {
                     $usersearch['username'] = $mapping;
                     if (!$user = $DB->get_record('user', $usersearch, 'id', IGNORE_MULTIPLE)) {
-                        $trace->output("error: skipping unknown user username '$mapping' in course '$course->mapping'", 1);
+                        //this happens quite often: it is just a user on voot who never showed up on moodle
+                        $trace->output("debug: skipping unknown user username '$mapping' in course '$course->mapping'", 1);
                         continue;
                     }
                     $user_mapping[$mapping] = $user->id;
