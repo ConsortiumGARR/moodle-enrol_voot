@@ -420,7 +420,10 @@ class enrol_voot_plugin extends enrol_plugin {
 
             // Get list of users that need to be enrolled and their roles.
             if (!$coursenrolments = $this->voot_getmembers($course->mapping)) {
-                $trace->output('Error while communicating with external enrolment VOOT server or no groups defined.');
+                $debug_msg =<<<MSG
+Error while communicating with external enrolment VOOT server or no group $course->mapping defined.
+MSG;
+                $trace->output($debug_msg);
                 $trace->finished();
                 return 2;
             }
@@ -438,7 +441,8 @@ class enrol_voot_plugin extends enrol_plugin {
                 if (!isset($user_mapping[$mapping])) {
                     $usersearch['username'] = $mapping;
                     if (!$user = $DB->get_record('user', $usersearch, 'id', IGNORE_MULTIPLE)) {
-                        $trace->output("error: skipping unknown user username '$mapping' in course '$course->mapping'", 1);
+                        //this happens quite often: it is just a user on voot who never showed up on moodle
+                        $trace->output("debug: skipping unknown user username '$mapping' in course '$course->mapping'", 1);
                         continue;
                     }
                     $user_mapping[$mapping] = $user->id;
